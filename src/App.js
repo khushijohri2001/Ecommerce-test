@@ -1,41 +1,49 @@
 import "./App.css";
+import './css/auth.css'
+import {
+  Routes,
+  Route,
+  NavLink,
+  useNavigate
+} from "react-router-dom";
+import { categories } from "./backend/db/categories";
+import Signup from "./frontend/pages/Signup";
 import logo from "./logo.png";
+import Products from "./frontend/pages/private/Products";
+import Home from "./frontend/pages/Home";
+import { useState } from "react";
+import RequiresAuth from "./frontend/RequiresAuth/RequiresAuth";
+import { useAuth } from "./contexts/auth-context";
+import { Login } from "./frontend/pages/Login";
+import Mockman from "mockman-js";
 
 function App() {
+  const {user,setUser} = useAuth();
+  const navigate = useNavigate();
+
+  const logoutHandler = () => {
+    localStorage.removeItem("token");
+    setUser(null);
+    navigate("/");
+  };
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} alt="mockBee logo" width="180" height="180" />
-        <h1 className="brand-title">
-          Welcome to <span>mockBee!</span>
-        </h1>
-        <p className="brand-description">
-          Get started by editing <code>src/App.js</code>
-        </p>
-        <div className="links">
-          <a
-            href="https://mockbee.netlify.app/"
-            target="_blank"
-            rel="noreferrer"
-          >
-            Explore mockBee
-          </a>
-          <a
-            href="https://mockbee.netlify.app/docs/api/introduction"
-            target="_blank"
-            rel="noreferrer"
-          >
-            API Documentation
-          </a>
-          <a
-            href="https://github.com/neogcamp/mockBee"
-            target="_blank"
-            rel="noreferrer"
-          >
-            Contribute
-          </a>
-        </div>
-      </header>
+    
+    <div style={{padding: 20}}>
+    <NavLink to='/' style={{padding: 10}}>Home</NavLink> ||
+    <NavLink to='/products' style={{padding: 10}}>products</NavLink>||
+    { !user ? <NavLink to="/login" className="nav-link hover-effect">Login/Signup</NavLink> : <button className="button primary-green nav-link hover-effect" onClick={logoutHandler} >Logout</button> }
+   
+    
+    <Routes>
+    <Route path='/' element={<Home />}/>
+    <Route path='/products' element={<RequiresAuth>
+   <Products />
+   </RequiresAuth>}/>
+   <Route path='/signup' element={<Signup />}/>
+   <Route path='/login' element={<Login />}/>
+   <Route path="/mock" element={<Mockman/>}/>
+    </Routes>
+    
     </div>
   );
 }

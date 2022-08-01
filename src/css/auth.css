@@ -1,0 +1,10 @@
+.auth-container{
+    display: flex;
+    
+    margin: auto;
+
+}
+
+.form-container{
+    border: 2px solid grey;
+}
